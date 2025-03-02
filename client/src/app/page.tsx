@@ -5,10 +5,10 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-6">
       {/* Hero Section */}
-      <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-center bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
+      <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-center bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent mb-5">
         Chaos Organizer
       </h1>
-      <p className="mt-4 text-lg md:text-2xl text-gray-300 text-center max-w-2xl">
+      <p className="mt-4 text-lg md:text-2xl text-gray-300 text-center max-w-2xl mt-4">
         Dump your mess. Drag it into order. Master the chaos in a dark,
         delightful abyss.
       </p>
