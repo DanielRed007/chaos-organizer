@@ -1,10 +1,9 @@
-"use client"; // Since we're using client-side hooks
+"use client";
 
-import { useState, useEffect } from "react";
+import { useChaos } from "@/context/ChaosContext";
 import { DndContext, useDraggable, useDroppable } from "@dnd-kit/core";
-import supabase from "@/lib/supabase";
 
-// Draggable Item Component
+// Draggable Item Component (unchanged)
 function DraggableItem({
   id,
   content,
@@ -14,16 +13,10 @@ function DraggableItem({
   content: string;
   index: number;
 }) {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: id,
-  });
-
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({ id });
   const style = transform
-    ? {
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-      }
+    ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` }
     : {};
-
   return (
     <div
       ref={setNodeRef}
@@ -37,7 +30,7 @@ function DraggableItem({
   );
 }
 
-// Droppable Area Component
+// Droppable Area Component (unchanged)
 function DroppableArea({
   children,
   id,
@@ -45,10 +38,7 @@ function DroppableArea({
   children: React.ReactNode;
   id: string;
 }) {
-  const { setNodeRef } = useDroppable({
-    id: id,
-  });
-
+  const { setNodeRef } = useDroppable({ id });
   return (
     <div ref={setNodeRef} className="p-4">
       {children}
@@ -58,28 +48,10 @@ function DroppableArea({
 
 // Main Page
 export default function OrganizePage() {
-  const [items, setItems] = useState<{ id: string; content: string }[]>([]);
+  const { items, updateItems } = useChaos(); // Use updateItems from context
 
-  // Fetch items from Supabase on mount
-  useEffect(() => {
-    async function fetchItems() {
-      const { data } = await supabase.from("items").select("id, content");
-      if (data) {
-        setItems(
-          data.map((item: any) => ({
-            id: item.id.toString(),
-            content: item.content,
-          }))
-        );
-      }
-    }
-    fetchItems();
-  }, []);
-
-  // Handle drag end and reorder items
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
-
     if (!over || active.id === over.id) return;
 
     const oldIndex = items.findIndex((item) => item.id === active.id);
@@ -89,8 +61,7 @@ export default function OrganizePage() {
     const [movedItem] = newItems.splice(oldIndex, 1);
     newItems.splice(newIndex, 0, movedItem);
 
-    setItems(newItems);
-    // TODO: Optionally update order in Supabase (e.g., add an "order" column)
+    updateItems(newItems); // Update context with reordered items
   };
 
   return (
