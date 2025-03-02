@@ -34,4 +34,48 @@ Welcome to **Chaos Organizer**, a dark-themed web app where you can dump your me
    git clone https://github.com/your-username/chaos-organizer.git
    cd chaos-organizer
 
-1. **Install Dependencies**
+2. **Install Dependencies**
+   ```bash
+   npm install
+
+3. **Set Up Environment Variables**
+   Create a .env.local file in the project root to store your Supabase keys:
+   ```bash
+   touch .env.local
+
+Add the following, replacing with your values from the Supabase dashboard:
+
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+
+Note: Never commit .env.local to Git—it’s already in .gitignore!
+
+4. **Run the Development Server**
+   
+   ```bash
+   npm run dev
+
+Open http://localhost:3000 in your browser.
+
+Explore the App
+/: Landing page
+
+/chaos: Add your chaotic items
+
+/organize: Drag them into order
+
+5. **Deployment**
+Push to a GitHub repository.
+
+Link it to Vercel.
+
+Add the same environment variables (NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY) in Vercel’s dashboard under Settings > Environment Variables.
+
+Deploy and enjoy!
+
+Contributing
+Feel free to fork, tweak, and submit pull requests. Chaos tamers unite!
+License
+MIT © [Your Name] 2025
+
+
