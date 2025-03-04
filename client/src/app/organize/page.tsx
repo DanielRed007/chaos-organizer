@@ -1,7 +1,16 @@
-"use client";
+'use client';
 
-import { useChaos } from "@/context/ChaosContext";
-import { DndContext, useDraggable, useDroppable } from "@dnd-kit/core";
+import { useChaos } from '@/context/ChaosContext';
+import { DndContext, useDraggable, useDroppable } from '@dnd-kit/core';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
+import { MoreVertical } from 'lucide-react';
+import supabase from '@/lib/supabase';
 
 function DraggableItem({
   id,
@@ -13,18 +22,46 @@ function DraggableItem({
   index: number;
 }) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({ id });
+  const { updateItems, items } = useChaos();
+
   const style = transform
     ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` }
     : {};
+
+  const handleDelete = async () => {
+    const { error } = await supabase.from('items').delete().eq('id', id);
+    if (error) {
+      console.error('Error deleting item:', error);
+      return;
+    }
+    const newItems = items.filter((item) => item.id !== id);
+    updateItems(newItems);
+  };
+
   return (
     <div
       ref={setNodeRef}
       style={style}
-      {...listeners}
-      {...attributes}
-      className="p-4 mb-4 bg-gray-800 border border-gray-700 rounded-lg text-gray-200 cursor-move hover:bg-gray-700 transition-colors"
+      className="p-4 mb-4 bg-gray-800 border border-gray-700 rounded-lg text-gray-200 cursor-move hover:bg-gray-700 transition-colors flex justify-between items-center"
     >
-      {content}
+      <span {...listeners} className="flex-1">
+        {content}
+      </span>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="p-1 h-auto w-auto text-gray-400 hover:text-purple-400">
+            <MoreVertical className="h-5 w-5" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="bg-gray-800 border-gray-700 text-gray-200">
+          <DropdownMenuItem
+            onClick={handleDelete}
+            className="hover:bg-gray-700 focus:bg-gray-700 cursor-pointer"
+          >
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 }
